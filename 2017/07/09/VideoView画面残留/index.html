@@ -93,16 +93,16 @@
 
 
 
-<meta name="description" content="&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;利用系统VideoView进行视频播放时，有时会出现画面的残留，一般我们都采用浮层的形式解决：&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;在未播放前显示浮层ImageView，在开始播放时隐藏图片，隐藏的时机一般在onPrepared中，还有一种是采用在开始绘制时videoView.setOnInfoListener(ne">
+<meta name="description" content="&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;利用系统VideoView进行视频播放时，有时会出现画面的残留，一般我们都采用浮层的形式解决：&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;在未播放前显示浮层ImageView，在开始播放时隐藏图片，隐藏的时机一般在onPrepared中，还有一种是采用在开始绘制时 videoView.setOnInfoListener(n">
 <meta property="og:type" content="article">
 <meta property="og:title" content="VideoView画面残留">
 <meta property="og:url" content="http://kithan.github.io/2017/07/09/VideoView画面残留/index.html">
 <meta property="og:site_name" content="做最大的梦想&lt;br&#x2F;&gt;过朴实的生活">
-<meta property="og:description" content="&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;利用系统VideoView进行视频播放时，有时会出现画面的残留，一般我们都采用浮层的形式解决：&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;在未播放前显示浮层ImageView，在开始播放时隐藏图片，隐藏的时机一般在onPrepared中，还有一种是采用在开始绘制时videoView.setOnInfoListener(ne">
-<meta property="og:updated_time" content="2017-07-09T04:51:03.000Z">
+<meta property="og:description" content="&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;利用系统VideoView进行视频播放时，有时会出现画面的残留，一般我们都采用浮层的形式解决：&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;在未播放前显示浮层ImageView，在开始播放时隐藏图片，隐藏的时机一般在onPrepared中，还有一种是采用在开始绘制时 videoView.setOnInfoListener(n">
+<meta property="og:updated_time" content="2017-07-12T09:48:20.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="VideoView画面残留">
-<meta name="twitter:description" content="&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;利用系统VideoView进行视频播放时，有时会出现画面的残留，一般我们都采用浮层的形式解决：&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;在未播放前显示浮层ImageView，在开始播放时隐藏图片，隐藏的时机一般在onPrepared中，还有一种是采用在开始绘制时videoView.setOnInfoListener(ne">
+<meta name="twitter:description" content="&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;利用系统VideoView进行视频播放时，有时会出现画面的残留，一般我们都采用浮层的形式解决：&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;在未播放前显示浮层ImageView，在开始播放时隐藏图片，隐藏的时机一般在onPrepared中，还有一种是采用在开始绘制时 videoView.setOnInfoListener(n">
 
 
 
@@ -320,17 +320,52 @@
       
 
       
-        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;利用系统VideoView进行视频播放时，有时会出现画面的残留，一般我们都采用浮层的形式解决：<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;在未播放前显示浮层ImageView，在开始播放时隐藏图片，隐藏的时机一般在onPrepared中，还有一种是采用在开始绘制时<br><code>videoView.setOnInfoListener(new MediaPlayer.OnInfoListener() {
-            @Override
-            public boolean onInfo(MediaPlayer mp, int what, int extra) {
-                if(what==MediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START){
-                    //
-                }
-                return false;
-            }
-        });</code></p>
-<p>使用小米盒子的系统播放器播放视频进行切换时会有画面残留。一般经过多次调试可以通过重绘surface完成，不过要注意重绘的时间</p>
+        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;利用系统VideoView进行视频播放时，有时会出现画面的残留，一般我们都采用浮层的形式解决：<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;在未播放前显示浮层ImageView，在开始播放时隐藏图片，隐藏的时机一般在onPrepared中，还有一种是采用在开始绘制时</p>
+<pre><code>videoView.setOnInfoListener(new MediaPlayer.OnInfoListener() {
+    @Override
+    public boolean onInfo(MediaPlayer mp, int what, int extra) {
+        if(what==MediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START){
+            //
+        }
+        return false;
+    }
+});
+</code></pre><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;使用小米盒子的系统播放器播放视频进行切换时会有画面残留。一般经过多次调试可以通过重绘surface完成，不过要注意重绘的时间.主要代码如下（通过在surface创建时绘制内容）</p>
+<pre><code>getHolder().addCallback(new SurfaceHolder.Callback2() {
+@Override
+public void surfaceRedrawNeeded(SurfaceHolder holder) {
 
+}
+
+@Override
+public void surfaceCreated(final SurfaceHolder holder) {
+    SdkLogger.d(&quot;surfaceCreated&quot;);
+    new Thread() {
+        @Override
+        public void run() {
+            SdkLogger.d(&quot;clearSurfaceThread&quot;);
+            if (holder != null) {
+                Canvas canvas = holder.lockCanvas();
+                if (canvas != null) {
+                    canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
+                    holder.unlockCanvasAndPost(canvas);
+                }
+            }
+        }
+    }.start();
+
+}
+
+@Override
+public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+
+}
+
+@Override
+public void surfaceDestroyed(SurfaceHolder holder) {
+
+}});
+</code></pre>
       
     </div>
 
@@ -375,6 +410,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/07/12/Fragment显示隐藏以及焦点处理/" rel="prev" title="Fragment显示隐藏以及焦点处理">
+                Fragment显示隐藏以及焦点处理 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
