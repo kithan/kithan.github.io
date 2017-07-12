@@ -379,10 +379,10 @@
 </li>
 </ul>
 <ul>
-<li><p>事件处理</p>
+<li><p><strong>事件处理</strong></p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;由于Fragment没有事件派发相关处理，因此需要通过在Activity中进行事件相关处理</p>
 <ul>
-<li><p>派发事件dispatchKeyEvent:</p>
+<li><p><strong>派发事件dispatchKeyEvent</strong>:</p>
 <pre><code>if (fullFragment != null &amp;&amp; 
     fullFragment.isVisible() &amp;&amp; 
     fullFragment.isFullScreen()) {
@@ -393,14 +393,14 @@
    return handler ? handler : super.dispatchKeyEvent(event);
 }   
 </code></pre></li>
-<li><p>按下 onKeyDown</p>
+<li><p><strong>按下 onKeyDown</strong></p>
 <pre><code>if (fullFragment != null &amp;&amp; fullFragment.isVisible() &amp;&amp; 
     fullFragment.isFullScreen()) {
    boolean handler = fullFragment.onKeyDown(keyCode, event);
    return handler ? handler : super.onKeyDown(keyCode, event);
 }
 </code></pre></li>
-<li><p>onKeyUp:</p>
+<li><p><strong>onKeyUp</strong>:</p>
 <pre><code>if (fullFragment != null &amp;&amp; fullFragment.isVisible() &amp;&amp; 
     fullFragment.isFullScreen()) {
     boolean handler = fullFragment.onKeyUp(keyCode, event);

@@ -100,7 +100,7 @@
 <meta property="og:url" content="http://kithan.github.io/2017/07/12/Fragment显示隐藏以及焦点处理/index.html">
 <meta property="og:site_name" content="做最大的梦想&lt;br&#x2F;&gt;过朴实的生活">
 <meta property="og:description" content="&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;在TV端开发工作中临时添加接到一个需求：对原有小窗播放添加全屏播放的功能 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;现状：  首页ViewPager+Fragment，其中某个Fragment中存在小窗播放 全屏播放在独立的Activity+单个Fragment中，包含其他业务逻辑（如播放列表）  &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp">
-<meta property="og:updated_time" content="2017-07-12T09:52:37.000Z">
+<meta property="og:updated_time" content="2017-07-12T09:54:23.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Fragment显示隐藏以及焦点处理">
 <meta name="twitter:description" content="&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;在TV端开发工作中临时添加接到一个需求：对原有小窗播放添加全屏播放的功能 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;现状：  首页ViewPager+Fragment，其中某个Fragment中存在小窗播放 全屏播放在独立的Activity+单个Fragment中，包含其他业务逻辑（如播放列表）  &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp">
@@ -378,10 +378,10 @@
 </li>
 </ul>
 <ul>
-<li><p>事件处理</p>
+<li><p><strong>事件处理</strong></p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;由于Fragment没有事件派发相关处理，因此需要通过在Activity中进行事件相关处理</p>
 <ul>
-<li><p>派发事件dispatchKeyEvent:</p>
+<li><p><strong>派发事件dispatchKeyEvent</strong>:</p>
 <pre><code>if (fullFragment != null &amp;&amp; 
     fullFragment.isVisible() &amp;&amp; 
     fullFragment.isFullScreen()) {
@@ -392,14 +392,14 @@
    return handler ? handler : super.dispatchKeyEvent(event);
 }   
 </code></pre></li>
-<li><p>按下 onKeyDown</p>
+<li><p><strong>按下 onKeyDown</strong></p>
 <pre><code>if (fullFragment != null &amp;&amp; fullFragment.isVisible() &amp;&amp; 
     fullFragment.isFullScreen()) {
    boolean handler = fullFragment.onKeyDown(keyCode, event);
    return handler ? handler : super.onKeyDown(keyCode, event);
 }
 </code></pre></li>
-<li><p>onKeyUp:</p>
+<li><p><strong>onKeyUp</strong>:</p>
 <pre><code>if (fullFragment != null &amp;&amp; fullFragment.isVisible() &amp;&amp; 
     fullFragment.isFullScreen()) {
     boolean handler = fullFragment.onKeyUp(keyCode, event);
