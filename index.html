@@ -365,11 +365,15 @@
 <ul>
 <li><p>全屏：</p>
 <pre><code>mView.setFocusable(true);
-((ViewGroup) mView).setDescendantFocusability(ViewGroup.FOCUS_AFTER_DESCENDANTS);//子view优先获取
+((ViewGroup) mView).setDescendantFocusability
+(ViewGroup.FOCUS_AFTER_DESCENDANTS);
+//子view优先获取
 </code></pre></li>
 <li><p>小窗：</p>
 <pre><code>mView.setFocusable(false);
-((ViewGroup) mView).setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);//阻止子view抢夺焦点
+((ViewGroup) mView).setDescendantFocusability
+(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
+//阻止子view抢夺焦点
 </code></pre></li>
 </ul>
 </li>
@@ -379,34 +383,37 @@
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;由于Fragment没有事件派发相关处理，因此需要通过在Activity中进行事件相关处理</p>
 <ul>
 <li><p>派发事件dispatchKeyEvent:</p>
-<pre><code>if (fullFragment != null &amp;&amp; fullFragment.isVisible() &amp;&amp; fullFragment.isFullScreen()) {
-   if (!fullFragment.getView().hasFocus()) {
-      fullFragment.getView().requestFocus();
+<pre><code>if (fullFragment != null &amp;&amp; 
+    fullFragment.isVisible() &amp;&amp; 
+    fullFragment.isFullScreen()) {
+      if (!fullFragment.getView().hasFocus()) {
+        fullFragment.getView().requestFocus();
     }
    boolean handler = fullFragment.getView().dispatchKeyEvent(event);
    return handler ? handler : super.dispatchKeyEvent(event);
+}   
+</code></pre></li>
+<li><p>按下 onKeyDown</p>
+<pre><code>if (fullFragment != null &amp;&amp; fullFragment.isVisible() &amp;&amp; 
+    fullFragment.isFullScreen()) {
+   boolean handler = fullFragment.onKeyDown(keyCode, event);
+   return handler ? handler : super.onKeyDown(keyCode, event);
+}
+</code></pre></li>
+<li><p>onKeyUp:</p>
+<pre><code>if (fullFragment != null &amp;&amp; fullFragment.isVisible() &amp;&amp; 
+    fullFragment.isFullScreen()) {
+    boolean handler = fullFragment.onKeyUp(keyCode, event);
+    if(event.getKeyCode() == KeyEvent.KEYCODE_BACK){
+      toSmallScreenFocusView.requestFocus();
+}
+    return handler ? handler : super.onKeyUp(keyCode, event);
 }
 </code></pre></li>
 </ul>
 </li>
 </ul>
-<pre><code>- 按下 onKeyDown
 
-        if (fullFragment != null &amp;&amp; fullFragment.isVisible() &amp;&amp; fullFragment.isFullScreen()) {
-           boolean handler = fullFragment.onKeyDown(keyCode, event);
-           return handler ? handler : super.onKeyDown(keyCode, event);
-        }
-
-- onKeyUp:
-
-        if (fullFragment != null &amp;&amp; fullFragment.isVisible() &amp;&amp; fullFragment.isFullScreen()) {
-            boolean handler = fullFragment.onKeyUp(keyCode, event);
-            if(event.getKeyCode() == KeyEvent.KEYCODE_BACK){
-              toSmallScreenFocusView.requestFocus();
-        }
-            return handler ? handler : super.onKeyUp(keyCode, event);
-        }
-</code></pre>
           
         
       
