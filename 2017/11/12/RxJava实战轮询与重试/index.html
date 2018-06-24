@@ -100,6 +100,7 @@
 <meta property="og:url" content="http://kithan.github.io/2017/11/12/RxJava实战轮询与重试/index.html">
 <meta property="og:site_name" content="做最大的梦想&lt;br&#x2F;&gt;过朴实的生活">
 <meta property="og:description" content="项目需求   &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;TV端可通过账号和扫描二维码登录，二维码页面通过轮询接口获取扫码登录结果。  后端接口：     获取轮询所需token参数，有效期10分钟 登录轮询：携带token参数    实现思路普通青年 请求token接口获取token，并利用handler定时轮询刷新token    api.getPollingToken()    priv">
+<meta property="og:locale" content="zh-Hans">
 <meta property="og:updated_time" content="2017-11-12T00:38:34.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="RxJava实战之轮询与重试">
@@ -377,7 +378,7 @@
 </code></pre><p>   }</p>
 </li>
 </ul>
-<h3 id="文艺青年"><a href="#文艺青年" class="headerlink" title="文艺青年"></a>文艺青年</h3><p>   主要思路：<br>   利用RxJava repeatWhen实现轮询，retryWhen捕获自定义异常进行token刷新。<br>   原理解析可参看<a href="http://www.jcodecraeer.com/a/anzhuokaifa/androidkaifa/2016/0206/3953.html" target="_blank" rel="external">泡在网上的日子</a>对此的说明。</p>
+<h3 id="文艺青年"><a href="#文艺青年" class="headerlink" title="文艺青年"></a>文艺青年</h3><p>   主要思路：<br>   利用RxJava repeatWhen实现轮询，retryWhen捕获自定义异常进行token刷新。<br>   原理解析可参看<a href="http://www.jcodecraeer.com/a/anzhuokaifa/androidkaifa/2016/0206/3953.html" target="_blank" rel="noopener">泡在网上的日子</a>对此的说明。</p>
 <pre><code>Observable.just(pollingParams)
         .flatMap(new Function&lt;Map&lt;String, String&gt;, ObservableSource&lt;PollingResult&gt;&gt;() {
             @Override
@@ -505,6 +506,10 @@
 
           <div class="post-nav-prev post-nav-item">
             
+              <a href="/2018/06/24/测试/" rel="prev" title="">
+                 <i class="fa fa-chevron-right"></i>
+              </a>
+            
           </div>
         </div>
       
@@ -577,7 +582,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-count">4</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -657,7 +662,7 @@
         <div class="copyright" >
   
   &copy; 
-  <span itemprop="copyrightYear">2017</span>
+  <span itemprop="copyrightYear">2018</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
